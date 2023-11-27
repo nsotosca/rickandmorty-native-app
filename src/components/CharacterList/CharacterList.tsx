@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { FlatList, View } from "react-native";
 
 import { CharacterListItem } from "./CharacterListItem";
@@ -60,4 +61,4 @@ const CharacterList = <T,>(props: Props<T>) => {
   );
 };
 
-export default CharacterList;
+export default memo(CharacterList);

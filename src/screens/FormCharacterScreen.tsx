@@ -10,7 +10,10 @@ import {
 } from "react-native";
 
 import { useAppDispatch } from "../store/hooks";
-import { addCustomCharacter } from "../store/characterSlice";
+import {
+  addCustomCharacter,
+  editCustomCharacter,
+} from "../store/characterSlice";
 import { COLORS, SCREENS, STATUS } from "../utils/enums";
 
 import Input from "../components/Input";
@@ -44,11 +47,22 @@ const initialValues = {
   image: "",
 };
 
-const AddCharacterScreen = ({ navigation }) => {
+const initialErrors = {
+  name: "",
+  age: "",
+  gender: "",
+  origin: "",
+  status: "",
+  image: "",
+};
+
+const FormCharacterScreen = ({ route, navigation }) => {
+  const routeParams = route.params;
+
   const dispatch = useAppDispatch();
 
-  const [inputs, setInputs] = useState(initialValues);
-  const [errors, setErrors] = useState(initialValues);
+  const [inputs, setInputs] = useState(routeParams?.character ?? initialValues);
+  const [errors, setErrors] = useState(initialErrors);
   const [isLoading, setIsLoading] = useState(false);
 
   const validate = () => {
@@ -117,12 +131,23 @@ const AddCharacterScreen = ({ navigation }) => {
       try {
         setIsLoading(false);
 
-        dispatch(
-          addCustomCharacter({
-            ...inputs,
-            status: STATUS[inputs.status.toLowerCase()],
-          })
-        );
+        const status = STATUS[inputs.status.toLowerCase()];
+
+        if (routeParams?.editionMode) {
+          dispatch(
+            editCustomCharacter({
+              ...inputs,
+              status,
+            })
+          );
+        } else {
+          dispatch(
+            addCustomCharacter({
+              ...inputs,
+              status,
+            })
+          );
+        }
 
         navigation.navigate(SCREENS.CUSTOM_CHARACTERS);
       } catch (error) {
@@ -132,8 +157,14 @@ const AddCharacterScreen = ({ navigation }) => {
   };
 
   const goBack = () => {
+    if (routeParams?.editionMode) {
+      return navigation.navigate(SCREENS.CUSTOM_CHARACTER);
+    }
+
     navigation.navigate(SCREENS.CUSTOM_CHARACTERS);
   };
+
+  const title = `${routeParams?.editionMode ? "Edit" : "Add new"} character`;
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -141,10 +172,11 @@ const AddCharacterScreen = ({ navigation }) => {
         <Loader />
       ) : (
         <>
-          <Text style={[styles.title]}>Add new character</Text>
+          <Text style={[styles.title]}>{title}</Text>
           <ScrollView>
             <View style={[styles.form]}>
               <Input
+                value={inputs.name}
                 label={FieldLabel.name}
                 placeholder="Name"
                 required
@@ -153,6 +185,7 @@ const AddCharacterScreen = ({ navigation }) => {
                 onFocus={() => handleErrors("", FieldName.name)}
               />
               <Input
+                value={inputs?.age}
                 label={FieldLabel.age}
                 placeholder="Age"
                 required
@@ -162,6 +195,7 @@ const AddCharacterScreen = ({ navigation }) => {
                 onFocus={() => handleErrors("", FieldName.age)}
               />
               <Input
+                value={inputs?.gender}
                 label={FieldLabel.gender}
                 placeholder="Gender"
                 required
@@ -170,6 +204,7 @@ const AddCharacterScreen = ({ navigation }) => {
                 onFocus={() => handleErrors("", FieldName.gender)}
               />
               <Input
+                value={inputs?.origin}
                 label={FieldLabel.origin}
                 placeholder="Origin"
                 required
@@ -178,6 +213,7 @@ const AddCharacterScreen = ({ navigation }) => {
                 onFocus={() => handleErrors("", FieldName.origin)}
               />
               <Input
+                value={inputs?.status}
                 label={FieldLabel.status}
                 placeholder="Alive | Die | unknown"
                 required
@@ -186,13 +222,18 @@ const AddCharacterScreen = ({ navigation }) => {
                 onFocus={() => handleErrors("", FieldName.status)}
               />
               <ImagePicker
+                defaultImage={inputs.image}
                 onChangeImage={(image) => {
                   handleChange(image, FieldName.image);
                 }}
                 error={errors?.image}
               />
               <View style={[styles.actions]}>
-                <Button label="Go Back!" onPress={goBack} />
+                <Button
+                  label="Go Back!"
+                  onPress={goBack}
+                  style={{ backgroundColor: COLORS.light.accent }}
+                />
                 <Button label="Save character!" onPress={validate} />
               </View>
             </View>
@@ -203,7 +244,7 @@ const AddCharacterScreen = ({ navigation }) => {
   );
 };
 
-export default AddCharacterScreen;
+export default FormCharacterScreen;
 
 const styles = StyleSheet.create({
   container: {

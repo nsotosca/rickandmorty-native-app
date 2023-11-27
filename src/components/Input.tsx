@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: COLORS.light.accent,
   },
   inputError: {
-    borderColor: "FF8F8F",
+    borderColor: COLORS.commons.red,
     borderWidth: 1,
   },
   label: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 14,
-    color: "#FF8F8F",
+    color: COLORS.commons.red,
     fontWeight: "500",
   },
 });

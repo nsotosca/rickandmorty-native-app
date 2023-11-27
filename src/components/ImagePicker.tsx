@@ -1,7 +1,5 @@
 import { useState } from "react";
 import * as ImgPicker from "expo-image-picker";
-
-import { COLORS } from "../utils/enums";
 import {
   Image,
   StyleSheet,
@@ -9,17 +7,23 @@ import {
   View,
   TouchableWithoutFeedback,
 } from "react-native";
+
+import { COLORS } from "../utils/enums";
 import { getBase64 } from "../utils";
 
 interface Props {
+  defaultImage?: string;
   error?: string;
   onChangeImage: (image: string) => void;
 }
-
 const defaultImagePreview = require("../../assets/rickandmortylogo.png");
 
-const ImagePicker = ({ error, onChangeImage = () => {} }: Props) => {
-  const [image, setImage] = useState("");
+const ImagePicker = ({
+  defaultImage,
+  error,
+  onChangeImage = () => {},
+}: Props) => {
+  const [image, setImage] = useState(defaultImage);
 
   const onPress = async () => {
     let result = await ImgPicker.launchImageLibraryAsync({
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    backgroundColor: COLORS.light.secondary,
+    backgroundColor: COLORS.light.accent,
   },
   buttonText: {
     color: COLORS.light.main,
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 14,
-    color: "#ff5067",
+    color: COLORS.commons.red,
     fontWeight: "500",
   },
 });

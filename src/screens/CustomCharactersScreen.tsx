@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  TouchableWithoutFeedback,
-  View,
-  StyleSheet,
-} from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useEffect, useState } from "react";
+import { SafeAreaView, View, StyleSheet } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectCharacter } from "../store/characterSlice";
@@ -15,6 +9,7 @@ import { ICustomCharacter } from "../types/customCharacters";
 import CharacterList from "../components/CharacterList";
 import Button from "../components/Button";
 import NoData from "../components/NoData";
+import FloatIconButton from "../components/FloatIconButton";
 
 const CustomCharactersScreen = ({ navigation }) => {
   const characters = useAppSelector(
@@ -30,8 +25,8 @@ const CustomCharactersScreen = ({ navigation }) => {
     navigation.navigate(SCREENS.CUSTOM_CHARACTER);
   };
 
-  const onAddItem = () => {
-    navigation.navigate(SCREENS.ADD_CUSTOM_CHARACTER);
+  const addItem = () => {
+    navigation.navigate(SCREENS.FORM_CUSTOM_CHARACTER);
   };
 
   useEffect(() => {
@@ -51,20 +46,17 @@ const CustomCharactersScreen = ({ navigation }) => {
               loading={isLoading}
             />
 
-            <TouchableWithoutFeedback onPress={onAddItem}>
-              <View style={[styles.buttonAdd]}>
-                <MaterialCommunityIcons
-                  name="account-plus"
-                  color="#FAFAFA"
-                  size={30}
-                />
-              </View>
-            </TouchableWithoutFeedback>
+            <FloatIconButton
+              icon="account-plus"
+              position={{ right: 10, bottom: 10 }}
+              onPress={addItem}
+              backgroundColor={COLORS.light.accent}
+            />
           </>
         ) : (
           <View style={[styles.noData]}>
             <NoData message="This is empty, Rick!" />
-            <Button label="Add new character" onPress={onAddItem} />
+            <Button label="Add new character" onPress={addItem} />
           </View>
         )}
       </>
@@ -75,19 +67,6 @@ const CustomCharactersScreen = ({ navigation }) => {
 export default CustomCharactersScreen;
 
 const styles = StyleSheet.create({
-  buttonAdd: {
-    backgroundColor: COLORS.light.secondary,
-    borderRadius: 100,
-    width: 50,
-    height: 50,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    right: 10,
-    bottom: 10,
-    elevation: 4,
-  },
   noData: {
     flex: 1,
     gap: 10,

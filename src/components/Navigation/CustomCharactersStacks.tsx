@@ -1,32 +1,20 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { CommonActions } from "@react-navigation/native";
 
 import { useAppSelector } from "../../store/hooks";
-import { COLORS } from "../../utils/enums";
+import { COLORS, SCREENS } from "../../utils/enums";
 
 import CustomCharactersScreen from "../../screens/CustomCharactersScreen";
 import CustomCharacterScreen from "../../screens/CustomCharacterScreen";
-import AddCharacterScreen from "../../screens/AddCharacterScreen";
+import FormCharacterScreen from "../../screens/FormCharacterScreen";
 
 const Stack = createNativeStackNavigator();
 
-const resetRoute = ({ navigation, route }) => ({
-  blur: () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "CustomCharacters" }],
-      })
-    );
-  },
-});
-
-export const CustomCharactersStacks = () => {
+const CustomCharactersStacks = () => {
   const store = useAppSelector((state) => state.characters.value);
 
   return (
     <Stack.Navigator
-      initialRouteName="CustomCharacters"
+      initialRouteName={SCREENS.CUSTOM_CHARACTERS}
       screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.light.main,
@@ -36,7 +24,7 @@ export const CustomCharactersStacks = () => {
       }}
     >
       <Stack.Screen
-        name="CustomCharacters"
+        name={SCREENS.CUSTOM_CHARACTERS}
         component={CustomCharactersScreen}
         options={{
           headerShown: !!store.customCharacters.length,
@@ -45,19 +33,17 @@ export const CustomCharactersStacks = () => {
       />
 
       <Stack.Screen
-        name="CustomCharacter"
+        name={SCREENS.CUSTOM_CHARACTER}
         component={CustomCharacterScreen}
-        listeners={resetRoute}
-        options={{ title: store.character?.name ?? "" }}
+        options={{ title: store.character?.name ?? "Character" }}
       />
 
       <Stack.Screen
-        name="AddCustomCharacter"
-        component={AddCharacterScreen}
+        name={SCREENS.FORM_CUSTOM_CHARACTER}
+        component={FormCharacterScreen}
         options={{
           headerShown: false,
         }}
-        listeners={resetRoute}
       />
     </Stack.Navigator>
   );

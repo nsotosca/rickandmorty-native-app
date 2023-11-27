@@ -3,9 +3,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { COLORS } from "../../utils/enums";
 
-import CharactersStacks from "./CharactersStacks";
 import HomeScreen from "../../screens/HomeScreen";
-import AddCharacterScreen from "../../screens/AddCharacterScreen";
+import CharactersStacks from "./CharactersStacks";
 import CustomCharactersStacks from "./CustomCharactersStacks";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -14,8 +13,8 @@ const MainTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
-      activeColor={COLORS.light.secondary}
-      inactiveColor={COLORS.light.main}
+      activeColor={COLORS.light.accent}
+      inactiveColor={COLORS.light.accent}
       barStyle={{
         backgroundColor: COLORS.light.secondary,
       }}
@@ -31,7 +30,7 @@ const MainTabs = () => {
         }}
       />
       <Tab.Screen
-        name="CharactersTab"
+        name="CharactersStacks"
         component={CharactersStacks}
         options={{
           tabBarLabel: "Characters",
@@ -39,9 +38,15 @@ const MainTabs = () => {
             <MaterialCommunityIcons name="face-man" color={color} size={26} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("CharactersStacks", { screen: "Characters" });
+          },
+        })}
       />
       <Tab.Screen
-        name="CustomCharactersTab"
+        name="CustomCharactersStacks"
         component={CustomCharactersStacks}
         options={{
           tabBarLabel: "My Characters",
@@ -49,6 +54,14 @@ const MainTabs = () => {
             <MaterialCommunityIcons name="pirate" color={color} size={26} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("CustomCharactersStacks", {
+              screen: "CustomCharacters",
+            });
+          },
+        })}
       />
     </Tab.Navigator>
   );

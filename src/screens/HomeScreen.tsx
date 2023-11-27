@@ -6,7 +6,7 @@ import Button from "../components/Button";
 
 const HomeScreen = ({ navigation }) => {
   const onPress = () => {
-    navigation.navigate("CharactersTab");
+    navigation.navigate("CharactersStacks");
   };
 
   return (

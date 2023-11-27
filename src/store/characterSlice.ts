@@ -31,10 +31,28 @@ export const characterSlice = createSlice({
         newCustomCharacter,
       ];
     },
+    editCustomCharacter: (state, action: PayloadAction<ICustomCharacter>) => {
+      const characterIndex = state.value.customCharacters.findIndex(
+        (character) => character.id === action.payload.id
+      );
+
+      state.value.customCharacters[characterIndex] = action.payload;
+    },
+    deleteCustomCharacter: (state, action: PayloadAction<{ id: string }>) => {
+      const newCustomCharacters = state.value.customCharacters.filter(
+        (character) => character.id !== action.payload.id
+      );
+      state.value.customCharacters = newCustomCharacters;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { selectCharacter, addCustomCharacter } = characterSlice.actions;
+export const {
+  selectCharacter,
+  addCustomCharacter,
+  editCustomCharacter,
+  deleteCustomCharacter,
+} = characterSlice.actions;
 
 export default characterSlice.reducer;

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Text,
   TouchableHighlight,
@@ -6,7 +5,6 @@ import {
   TouchableHighlightProps,
   StyleProp,
   TextStyle,
-  ViewStyle,
 } from "react-native";
 import { COLORS } from "../utils/enums";
 

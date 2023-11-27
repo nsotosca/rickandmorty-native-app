@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Alert } from "react-native";
 
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { deleteCustomCharacter } from "../store/characterSlice";
 import { ICustomCharacter } from "../types/customCharacters";
-import { COLORS, STATUS_COLOR } from "../utils/enums";
+import { COLORS, SCREENS, STATUS_COLOR } from "../utils/enums";
 
 import Loader from "../components/Loader";
 import Button from "../components/Button";
+import FloatingButton from "../components/FloatingButton";
 
 const CustomCharacterScreen = ({ route, navigation }) => {
+  const dispatch = useAppDispatch();
   const character = useAppSelector(
     (state) => state.characters.value.character
   ) as ICustomCharacter;
@@ -22,7 +25,37 @@ const CustomCharacterScreen = ({ route, navigation }) => {
   }, []);
 
   const onGoBack = () => {
-    navigation.navigate("CustomCharacters");
+    navigation.navigate(SCREENS.CUSTOM_CHARACTERS);
+  };
+
+  const onEdit = () => {
+    navigation.navigate(SCREENS.FORM_CUSTOM_CHARACTER, {
+      editionMode: true,
+      character,
+    });
+  };
+
+  const onDelete = () => {
+    Alert.alert(
+      "Confirm delete character",
+      `You want to delete ${character.name}?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: deleteCharacter,
+        },
+      ]
+    );
+  };
+
+  const deleteCharacter = () => {
+    dispatch(deleteCustomCharacter({ id: character.id }));
+
+    navigation.navigate(SCREENS.CUSTOM_CHARACTERS);
   };
 
   return (
@@ -62,7 +95,20 @@ const CustomCharacterScreen = ({ route, navigation }) => {
               width: 110,
               alignSelf: "center",
               margin: 10,
+              backgroundColor: COLORS.light.accent,
             }}
+          />
+          <FloatingButton
+            position={{ right: 10, bottom: 70 }}
+            icon="account-edit"
+            backgroundColor={COLORS.light.accent}
+            onPress={onEdit}
+          />
+          <FloatingButton
+            position={{ right: 10, bottom: 10 }}
+            icon="delete"
+            backgroundColor={COLORS.commons.red}
+            onPress={onDelete}
           />
         </>
       )}
@@ -91,6 +137,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: COLORS.light.accent,
+    textTransform: "capitalize",
   },
   details: {
     gap: 10,
