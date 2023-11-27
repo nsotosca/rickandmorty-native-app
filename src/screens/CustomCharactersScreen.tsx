@@ -9,7 +9,7 @@ import { ICustomCharacter } from "../types/customCharacters";
 import CharacterList from "../components/CharacterList";
 import Button from "../components/Button";
 import NoData from "../components/NoData";
-import FloatIconButton from "../components/FloatIconButton";
+import FloatingButton from "../components/FloatingButton";
 
 const CustomCharactersScreen = ({ navigation }) => {
   const characters = useAppSelector(
@@ -46,7 +46,7 @@ const CustomCharactersScreen = ({ navigation }) => {
               loading={isLoading}
             />
 
-            <FloatIconButton
+            <FloatingButton
               icon="account-plus"
               position={{ right: 10, bottom: 10 }}
               onPress={addItem}
